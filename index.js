@@ -11,9 +11,13 @@ app.use(express.static("public"));
 
 app.get('/', (req, res) => {
     res.render('index.ejs');
-})
+});
+
+app.post("/submit", (req, res) => {
+    req.body
+});
 
 
 app.listen(PORT, () => {
     console.log(`Connected to server on Port: ${PORT}.`);
-})
+});
