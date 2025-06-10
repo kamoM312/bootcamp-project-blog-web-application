@@ -8,6 +8,25 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(express.static("public"));
 
+// app.use( function( req, res, next ) {
+//     // this middleware will call for each requested
+//     // and we checked for the requested query properties
+//     // if _method was existed
+//     // then we know, clients need to call DELETE request instead
+//     if ( req.query._method == 'DELETE' ) {
+//         // change the original METHOD
+//         // into DELETE method
+//         req.method = 'DELETE';
+//         // and set requested url to /user/12
+//         req.url = req.path;
+//     }       
+//     next(); 
+// });
+
+// import methodOverride from method-override;
+// app.use(methodOverride('_method'));
+
+
 const posts = [];
 
 // function createCard() {
@@ -61,7 +80,7 @@ const posts = [];
 
 
 app.get('/', (req, res) => {
-    res.render('index.ejs');
+    res.render('index.ejs', { posts });
 });
 
 app.post("/submit", (req, res) => {
@@ -70,16 +89,48 @@ app.post("/submit", (req, res) => {
     const text = req.body['text'];
     const image = req.body['image'];
 
+    const id = Math.floor(Math.random() * 1000);
+
     const post = {
       title: title,
       date: date,
       text: text,
-      image: image
+      image: image,
+      id:id
+
     }
 
     posts.push(post);
 
-    res.render("index.ejs", {posts})
+    res.redirect("/");
+});
+
+// app.delete("views/index.js/delete", (req, res) => {
+//   const deleteId = req.body['id'];
+//   posts.filter((e) => {
+//     e.id !== deleteId;
+//   })
+
+//   res.render("index.ejs", { posts });
+// });
+
+app.delete('/post/:id', (req, res) => {
+  const id = parseInt(req.params.id); // Parse ID from URL parameter
+  const index = posts.findIndex(item => item.id === id);
+
+  // Check if data exists for the ID
+  if (index === -1) {
+    return res.status(404).send("Data not found");
+  }
+
+  // Remove data from the array using splice
+  posts.splice(index, 1);
+
+  res.json({ message: "Data deleted successfully" });
+});
+
+app.patch("/update", (req, res) => {
+  console.log("updating")
 });
 
 
