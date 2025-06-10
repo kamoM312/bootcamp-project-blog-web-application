@@ -1,128 +1,214 @@
 <%- include("partials/header.ejs") %>
 
-<div class="container mt-5">
-  <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
-    <div class="col-lg-6 px-0">
-      <h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
-      <p class="lead my-3">
-        Multiple lines of text that form the lede, informing new readers quickly
-        and efficiently about what’s most interesting in this post’s contents.
-      </p>
-      <p class="lead mb-0">
-        <a href="#" class="text-body-emphasis fw-bold">Continue reading...</a>
-      </p>
+  <div class="container mt-5">
+    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+      <div class="col-lg-6 px-0">
+        <h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
+        <p class="lead my-3">
+          Multiple lines of text that form the lede, informing new readers quickly
+          and efficiently about what’s most interesting in this post’s contents.
+        </p>
+        <p class="lead mb-0">
+          <a href="#" class="text-body-emphasis fw-bold">Continue reading...</a>
+        </p>
+      </div>
     </div>
   </div>
-</div>
 
-<div id="blog-cards" class="container mt-5">
+  <div id="blog-cards" class="container mt-5">
 
-  <% if (locals.posts) { %>
-  <% posts.forEach(post => { %>
-    <div id="post-<%= post.id %>" class="col-md-6">
-    <div
-      class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
-    >
-      <div class="col p-4 d-flex flex-column position-static">
-        <strong class="d-inline-block mb-2 text-success-emphasis"
-          >Design</strong
-        >
-        <h3 class="mb-0"><%= post.title %></h3>
-        <div class="mb-1 text-body-secondary"><%= post.date %></div>
-        <p class="mb-auto">
-          <%= post.text %>
-        </p>
-        <!-- <a href="/post.ejs" class="icon-link gap-1 icon-link-hover stretched-link">
+    <% if (locals.posts) { %>
+      <% posts.forEach(post=> { %>
+        <div id="post-<%= post.id %>" class="col-md-6">
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-success-emphasis">Design</strong>
+              <h3 class="mb-0">
+                <%= post.title %>
+              </h3>
+              <div class="mb-1 text-body-secondary">
+                <%= post.date %>
+              </div>
+              <p class="mb-auto">
+                <%= post.text %>
+              </p>
+              <!-- <a href="/post.ejs" class="icon-link gap-1 icon-link-hover stretched-link">
           Continue reading
           <svg class="bi" aria-hidden="true">
             <use xlink:href="#chevron-right"></use>
           </svg>
         </a> -->
-      </div>
-      <div class="col-auto d-none d-lg-block">
-        <svg
-          aria-label="Placeholder: Thumbnail"
-          class="bd-placeholder-img"
-          height="250"
-          preserveAspectRatio="xMidYMid slice"
-          role="img"
-          width="200"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <title>Placeholder</title>
-          <rect width="100%" height="100%" fill="#55595c"></rect>
-          <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-        </svg>
-      </div>
-      <div>
-        <!-- <a href="/update">Update</a> -->
-        <button type="button" onclick="deleteItem('<%= post.id %>')">Delete</button>
-      </div>
-      <!-- <form>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+              <svg aria-label="Placeholder: Thumbnail" class="bd-placeholder-img" height="250"
+                preserveAspectRatio="xMidYMid slice" role="img" width="200" xmlns="http://www.w3.org/2000/svg">
+                <title>Placeholder</title>
+                <rect width="100%" height="100%" fill="#55595c"></rect>
+                <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+              </svg>
+            </div>
+            <div>
+              <button type="button" onclick="viewItem('<%= post.id %>', '<%= post.title %>', '<%= post.date %>', '<%= post.text %>', '<%= post.image %>' )">View</button>
+              <button type="button" onclick="updateItem('<%= post.id %>')">Update</button>
+              <button type="button" onclick="deleteItem('<%= post.id %>')">Delete</button>
+            </div>
+            <!-- <form>
         <input type="submit">
       </form> -->
+          </div>
+        </div>
+        <% }); %>
+          <% } else { %>
+            <h1>Create blog post</h1>
+            <% } %>
+
+  </div>
+
+  <div class="container">
+    <form action="/submit" method="post">
+      <!-- title  -->
+      <div class="form-group">
+        <label for="title">Title:</label>
+        <input type="text" class="form-control" id="title" name="title" />
+      </div>
+
+      <!-- date  -->
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" class="form-control" id="date" name="date" />
+      </div>
+
+      <!-- text  -->
+      <div class="form-group">
+        <label for="text">Post:</label>
+        <textarea class="form-control" id="text" name="text" rows="4" cols="50"></textarea>
+      </div>
+
+      <!-- image  -->
+      <div class="input-group mb-3">
+        <input type="file" class="form-control" id="inputGroupFile02" name="image" />
+        <label class="input-group-text" for="inputGroupFile02">Upload</label>
+      </div>
+
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+  </div>
+
+  <!-- update item modal  -->
+  <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
+    id="modalSheet">
+    <div class="modal-dialog">
+      <div class="modal-content rounded-4 shadow">
+
+        <div class="container">
+          <form action="/submit" method="post">
+            <!-- title  -->
+            <div class="form-group">
+              <label for="title">Title:</label>
+              <input type="text" class="form-control" id="title" name="title" />
+            </div>
+
+            <!-- date  -->
+            <div class="form-group">
+              <label for="date">Date:</label>
+              <input type="date" class="form-control" id="date" name="date" />
+            </div>
+
+            <!-- text  -->
+            <div class="form-group">
+              <label for="text">Post:</label>
+              <textarea class="form-control" id="text" name="text" rows="4" cols="50"></textarea>
+            </div>
+
+            <!-- image  -->
+            <div class="input-group mb-3">
+              <input type="file" class="form-control" id="inputGroupFile02" name="image" />
+              <label class="input-group-text" for="inputGroupFile02">Upload</label>
+            </div>
+
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        </div>
+
+      </div>
     </div>
   </div>
-  <% }); %>
-  <% } else { %>
-    <h1>Create blog post</h1>
-  <% } %>
 
-</div>
+  <!-- view full blog modal  -->
+  <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
+    id="modalSheet">
+    <div class="modal-dialog">
+      <div class="modal-content rounded-4 shadow">
+        <div class="container col-xxl-8 px-4 py-5">
+          <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+            <div class="col-10 col-sm-8 col-lg-6"> <img src="bootstrap-themes.png" class="d-block mx-lg-auto img-fluid"
+                alt="Bootstrap Themes" width="700" height="500" loading="lazy"> </div>
+            <div class="col-lg-6">
 
-<div class="container">
-  <form action="/submit" method="post">
-    <!-- title  -->
-    <div class="form-group">
-      <label for="title">Title:</label>
-      <input type="text" class="form-control" id="title" name="title" />
+              <h1 id="mod-blog-view-h1" class="display-5 fw-bold text-body-emphasis lh-1 mb-3"></h1>
+
+              <p id="mod-blog-view-date" class="lead"></p>
+
+              <p id="mod-blog-view-para" class="lead"></p>
+
+              <div class="d-grid gap-2 d-md-flex justify-content-md-start"> <button type="button"
+                  class="btn btn-primary btn-lg px-4 me-md-2">Primary</button> <button type="button"
+                  class="btn btn-outline-secondary btn-lg px-4">Default</button> </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <!-- date  -->
-    <div class="form-group">
-      <label for="date">Date:</label>
-      <input type="date" class="form-control" id="date" name="date" />
-    </div>
+  <script>
 
-    <!-- text  -->
-    <div class="form-group">
-      <label for="text">Post:</label>
-      <textarea
-        class="form-control"
-        id="text"
-        name="text"
-        rows="4"
-        cols="50"
-      ></textarea>
-    </div>
+    function viewItem(...post){
+      console.log(post)
+      let viewTitle = post[1];
+      let viewDate = post[2];
+      let viewText = post[3];
+      let id = post[0];
+      let img = post[4];
 
-    <!-- image  -->
-    <div class="input-group mb-3">
-      <input type="file" class="form-control" id="inputGroupFile02" name="image"/>
-      <label class="input-group-text" for="inputGroupFile02">Upload</label>
-    </div>
-
-    <button type="submit" class="btn btn-default">Submit</button>
-  </form>
-</div>
-
-<script>
-  function deleteItem(id) {
-    fetch(`/post/${id}`, {
-      method: 'DELETE'
-    }).then(res => {
-    if (res.ok) {
-      document.getElementById(`post-${id}`).remove(); // if you set IDs
-      // or window.location.reload();
-    } else {
-      alert('Failed to delete');
+      document.getElementById("mod-blog-view-h1").innerText = viewTitle;
+      document.getElementById("mod-blog-view-date").innerText = viewDate;
+      document.getElementById("mod-blog-view-para").innerText = viewText;
     }
-  })
-  .catch(err => {
-    console.error(err);
-    alert('An error occurred while deleting.');
-  });
-  }
-</script>
 
-</body>
+    function deleteItem(id) {
+      fetch(`/post/${id}`, {
+        method: 'DELETE'
+      }).then(res => {
+        if (res.ok) {
+          document.getElementById(`post-${id}`).remove(); // if you set IDs
+          // or window.location.reload();
+        } else {
+          alert('Failed to delete');
+        }
+      })
+        .catch(err => {
+          console.error(err);
+          alert('An error occurred while deleting.');
+        });
+    }
+
+    // function updateItem(id) {
+    //   fetch(`/post/${id}`, {
+    //     method: 'DELETE'
+    //   }).then(res => {
+    //   if (res.ok) {
+    //     document.getElementById(`post-${id}`).remove(); // if you set IDs
+    //     // or window.location.reload();
+    //   } else {
+    //     alert('Failed to delete');
+    //   }
+    // })
+    // .catch(err => {
+    //   console.error(err);
+    //   alert('An error occurred while deleting.');
+    // });
+    // }
+  </script>
+
+  </body>
