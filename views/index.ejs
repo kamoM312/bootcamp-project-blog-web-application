@@ -1,20 +1,14 @@
 <%- include("partials/header.ejs") %>
 
-  <div class="container mt-5">
-    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
-      <div class="col-lg-6 px-0">
-        <h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
-        <p class="lead my-3">
-          Multiple lines of text that form the lede, informing new readers quickly
-          and efficiently about what’s most interesting in this post’s contents.
-        </p>
-        <p class="lead mb-0">
-          <a href="#" class="text-body-emphasis fw-bold">Continue reading...</a>
-        </p>
-      </div>
-    </div>
+<section class="blog-intro">
+  <div class="intro-container">
+    <h1 class="intro-title">Welcome to Wild Wonders</h1>
+    <p class="intro-subtitle">
+      Explore the amazing world of animals — from the deepest oceans to the highest mountains.
+    </p>
+    <img src="/images/animals-hero.jpg" alt="Wild animals" class="intro-image" />
   </div>
-
+</section>
   <div id="blog-cards" class="container mt-5">
 
     <% if (locals.posts) { %>
@@ -64,7 +58,10 @@
 
   </div>
 
-  <div class="container">
+  <div class="container vertical">
+    <div class="cotainer">
+      <h1>Create Blog Posts:</h1>
+    </div>
     <form action="/submit" method="post">
       <!-- title  -->
       <div class="form-group">
@@ -96,7 +93,7 @@
 
   <!-- update item modal  -->
   <!-- Update Modal -->
-<div id="updateModal" class="custom-modal hidden">
+<!-- <div id="updateModal" class="custom-modal hidden">
   <div class="custom-modal-content">
     <span class="close-button" onclick="closeUpdateModal()">&times;</span>
     <form action="/update" method="POST"  enctype="multipart/form-data">
@@ -125,11 +122,48 @@
       <button type="submit" class="btn btn-primary">Update</button>
     </form>
   </div>
+</div> -->
+
+<!-- Update Blog Modal -->
+<div id="updateModal" class="custom-modal hidden">
+  <div class="custom-modal-dialog">
+    <div class="custom-modal-content">
+      <button class="custom-close-button" onclick="closeUpdateModal()">&times;</button>
+      <form action="/update" method="POST" enctype="multipart/form-data">
+        <input type="hidden" id="update-id" name="id" />
+
+        <div class="form-group">
+          <label for="update-title">Title:</label>
+          <input type="text" id="update-title" name="title" required />
+        </div>
+
+        <div class="form-group">
+          <label for="update-date">Date:</label>
+          <input type="date" id="update-date" name="date" required />
+        </div>
+
+        <div class="form-group">
+          <label for="update-text">Post:</label>
+          <textarea id="update-text" name="text" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="update-image">Upload Image:</label>
+          <input type="file" id="update-image" name="image" />
+        </div>
+
+        <div class="modal-buttons">
+          <button type="submit" class="primary-btn">Update</button>
+          <button type="button" class="secondary-btn" onclick="closeUpdateModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 
   <!-- view full blog modal  -->
-  <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
+  <!-- <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5 hidden" tabindex="-1" role="dialog"
     id="modalSheet">
     <div class="modal-dialog">
       <div class="modal-content rounded-4 shadow">
@@ -153,26 +187,58 @@
         </div>
       </div>
     </div>
+  </div> -->
+
+  <!-- View Blog Modal -->
+<div class="custom-modal hidden" id="modalSheet">
+  <div class="custom-modal-dialog">
+    <div class="custom-modal-content">
+      <button class="custom-close-button" onclick="closeViewModal()">&times;</button>
+      <div class="custom-modal-body">
+        <div class="custom-modal-image">
+          <img id="modal-image" src="" alt="Blog Image" />
+        </div>
+        <div class="custom-modal-text">
+          <h1 id="mod-blog-view-h1"></h1>
+          <p id="mod-blog-view-date" class="date"></p>
+          <p id="mod-blog-view-para" class="text"></p>
+          <!-- <div class="modal-buttons">
+            <button class="primary-btn">Primary</button>
+            <button class="secondary-btn">Default</button>
+          </div> -->
+        </div>
+      </div>
+    </div>
   </div>
+</div>
+
 
   <script>
 
-    function viewItem(...post){
-      console.log(post)
-      let viewTitle = post[1];
-      let viewDate = post[2];
-      let viewText = post[3];
-      let id = post[0];
-      let img = post[4];
+    function viewItem(id, title, date, text, image) {
+  document.getElementById("mod-blog-view-h1").innerText = title;
+  document.getElementById("mod-blog-view-date").innerText = date;
+  document.getElementById("mod-blog-view-para").innerText = text;
 
-      document.getElementById("mod-blog-view-h1").innerText = viewTitle;
-      document.getElementById("mod-blog-view-date").innerText = viewDate;
-      document.getElementById("mod-blog-view-para").innerText = viewText;
-    }
+  // Show image if available
+  const imgEl = document.getElementById("modal-image");
+  if (image) {
+    imgEl.src = image;
+    imgEl.style.display = "block";
+  } else {
+    imgEl.style.display = "none";
+  }
 
-    function updateItem(id, title, date, text, image) {
+  document.getElementById("modalSheet").classList.remove("hidden");
+}
+
+function closeViewModal() {
+  document.getElementById("modalSheet").classList.add("hidden");
+}
+
+
+function updateItem(id, title, date, text, image) {
   document.getElementById("update-id").value = id;
-  console.log("Populating modal with ID:", id);
   document.getElementById("update-title").value = title;
   document.getElementById("update-date").value = date;
   document.getElementById("update-text").value = text;

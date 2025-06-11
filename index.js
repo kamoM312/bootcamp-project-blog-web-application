@@ -112,7 +112,7 @@ app.post("/submit", upload.single("image"), (req, res) => {
 // });
 
 app.delete('/post/:id', (req, res) => {
-  const id = parseInt(req.params.id); // Parse ID from URL parameter
+   const id = req.params.id;
   const index = posts.findIndex(item => item.id === id);
 
   // Check if data exists for the ID

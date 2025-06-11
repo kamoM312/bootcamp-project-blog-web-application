@@ -2,35 +2,36 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Add the link to the CSS stylesheet here -->
-  <!-- Hint: the link is relative to the public folder -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-   <!-- <link rel="stylesheet" href="styles/main.css"> -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home</title>
+  <link rel="stylesheet" href="styles/main.css" />
 </head>
 
 <body>
-  <main>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-         <div class="container-fluid"> 
-            <a class="navbar-brand" href="#">Fixed navbar</a> 
-            <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation"> 
-                <span class="navbar-toggler-icon"></span> 
-            </button> 
-            <div class="navbar-collapse collapse" id="navbarCollapse" style="">
-                 <ul class="navbar-nav me-auto mb-2 mb-md-0"> 
-                    <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Home</a> </li> 
-                    <li class="nav-item"> <a class="nav-link" href="#">Link</a> </li> 
-                    <li class="nav-item"> <a class="nav-link disabled" aria-disabled="true">Disabled</a> </li> 
-                </ul> 
-                <form class="d-flex" role="search"> <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                     <button class="btn btn-outline-success" type="submit">Search</button> 
-                    </form> 
-                </div> 
-            </div> 
-        </nav>
+  <header class="navbar">
+    <div class="container">
+      <a class="brand" href="#">My Site</a>
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <nav class="nav-links" id="navLinks">
+        <a href="#" class="nav-link active">Home</a>
+        <a href="#" class="nav-link">Link</a>
+        <a href="#" class="nav-link disabled">Disabled</a>
+      </nav>
+    </div>
+  </header>
 
-        <br>
+  <main class="main-content">
+    <!-- Your content here -->
+  </main>
+
+  <script>
+    const toggle = document.getElementById('menuToggle');
+    const nav = document.getElementById('navLinks');
+    toggle.addEventListener('click', () => {
+      nav.classList.toggle('open');
+    });
+  </script>
+</body>
+
+</html>
