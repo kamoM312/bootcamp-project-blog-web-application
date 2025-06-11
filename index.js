@@ -1,10 +1,12 @@
 import express from 'express';
-import bodyParser from 'body-parser';
+// import bodyParser from 'body-parser';
+import multer from 'multer';
 
 const app = express();
 const PORT = 3000;
+const upload = multer({ dest: 'uploads/' })
 
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: true}));
 
 app.use(express.static("public"));
 
@@ -83,26 +85,21 @@ app.get('/', (req, res) => {
     res.render('index.ejs', { posts });
 });
 
-app.post("/submit", (req, res) => {
-    const title = req.body['title'];
-    const date = req.body['date'];
-    const text = req.body['text'];
-    const image = req.body['image'];
+app.post("/submit", upload.single("image"), (req, res) => {
+  const { title, date, text } = req.body;
+  const image = req.file ? req.file.filename : null;
 
-    const id = Math.floor(Math.random() * 1000);
+  const newPost = {
+    id: Date.now().toString(), // unique string ID
+    title,
+    date,
+    text,
+    image
+  };
 
-    const post = {
-      title: title,
-      date: date,
-      text: text,
-      image: image,
-      id:id
+  posts.push(newPost);
 
-    }
-
-    posts.push(post);
-
-    res.redirect("/");
+  res.redirect("/");
 });
 
 // app.delete("views/index.js/delete", (req, res) => {
@@ -129,8 +126,26 @@ app.delete('/post/:id', (req, res) => {
   res.json({ message: "Data deleted successfully" });
 });
 
-app.patch("/update", (req, res) => {
-  console.log("updating")
+app.post("/update", upload.single("image"), (req, res) => {
+  const { id, title, date, text } = req.body;
+  const image = req.file ? req.file.filename : null;
+
+  const index = posts.findIndex(post => post.id === id);
+
+  if (index === -1) {
+    console.log("Post not found for ID:", id);
+    return res.status(404).send("Post not found");
+  }
+
+  // Update post data
+  posts[index].title = title;
+  posts[index].date = date;
+  posts[index].text = text;
+  if (image) {
+    posts[index].image = image;
+  }
+
+  res.redirect("/");
 });
 
 

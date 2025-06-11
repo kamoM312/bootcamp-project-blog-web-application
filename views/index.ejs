@@ -49,7 +49,7 @@
             </div>
             <div>
               <button type="button" onclick="viewItem('<%= post.id %>', '<%= post.title %>', '<%= post.date %>', '<%= post.text %>', '<%= post.image %>' )">View</button>
-              <button type="button" onclick="updateItem('<%= post.id %>')">Update</button>
+              <button type="button" onclick="updateItem('<%= post.id %>' , '<%= post.title %>', '<%= post.date %>', '<%= post.text %>', '<%= post.image %>')">Update</button>
               <button type="button" onclick="deleteItem('<%= post.id %>')">Delete</button>
             </div>
             <!-- <form>
@@ -95,44 +95,38 @@
   </div>
 
   <!-- update item modal  -->
-  <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
-    id="modalSheet">
-    <div class="modal-dialog">
-      <div class="modal-content rounded-4 shadow">
+  <!-- Update Modal -->
+<div id="updateModal" class="custom-modal hidden">
+  <div class="custom-modal-content">
+    <span class="close-button" onclick="closeUpdateModal()">&times;</span>
+    <form action="/update" method="POST"  enctype="multipart/form-data">
+      <input type="hidden" id="update-id" name="id" />
 
-        <div class="container">
-          <form action="/submit" method="post">
-            <!-- title  -->
-            <div class="form-group">
-              <label for="title">Title:</label>
-              <input type="text" class="form-control" id="title" name="title" />
-            </div>
-
-            <!-- date  -->
-            <div class="form-group">
-              <label for="date">Date:</label>
-              <input type="date" class="form-control" id="date" name="date" />
-            </div>
-
-            <!-- text  -->
-            <div class="form-group">
-              <label for="text">Post:</label>
-              <textarea class="form-control" id="text" name="text" rows="4" cols="50"></textarea>
-            </div>
-
-            <!-- image  -->
-            <div class="input-group mb-3">
-              <input type="file" class="form-control" id="inputGroupFile02" name="image" />
-              <label class="input-group-text" for="inputGroupFile02">Upload</label>
-            </div>
-
-            <button type="submit" class="btn btn-default">Submit</button>
-          </form>
-        </div>
-
+      <div class="form-group">
+        <label for="update-title">Title:</label>
+        <input type="text" class="form-control" id="update-title" name="title" />
       </div>
-    </div>
+
+      <div class="form-group">
+        <label for="update-date">Date:</label>
+        <input type="date" class="form-control" id="update-date" name="date" />
+      </div>
+
+      <div class="form-group">
+        <label for="update-text">Post:</label>
+        <textarea class="form-control" id="update-text" name="text" rows="4"></textarea>
+      </div>
+
+      <div class="input-group mb-3">
+        <input type="file" class="form-control" id="update-image" name="image" />
+        <label class="input-group-text" for="update-image">Upload</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Update</button>
+    </form>
   </div>
+</div>
+
 
   <!-- view full blog modal  -->
   <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
@@ -176,6 +170,17 @@
       document.getElementById("mod-blog-view-para").innerText = viewText;
     }
 
+    function updateItem(id, title, date, text, image) {
+  document.getElementById("update-id").value = id;
+  console.log("Populating modal with ID:", id);
+  document.getElementById("update-title").value = title;
+  document.getElementById("update-date").value = date;
+  document.getElementById("update-text").value = text;
+
+  document.getElementById("updateModal").classList.remove("hidden");
+}
+
+
     function deleteItem(id) {
       fetch(`/post/${id}`, {
         method: 'DELETE'
@@ -192,6 +197,18 @@
           alert('An error occurred while deleting.');
         });
     }
+
+    function closeUpdateModal() {
+  document.getElementById("updateModal").classList.add("hidden");
+}
+
+window.onclick = function(event) {
+  const modal = document.getElementById("updateModal");
+  if (event.target === modal) {
+    modal.classList.add("hidden");
+  }
+};
+
 
     // function updateItem(id) {
     //   fetch(`/post/${id}`, {
